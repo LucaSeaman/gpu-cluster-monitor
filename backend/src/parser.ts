@@ -1,4 +1,4 @@
-import {GPUPacket} from './simulator'
+import {GPUPacket} from './simulator.js'
 
 export function parseGPUParser(buffer : Buffer): GPUPacket {
     if (buffer.length!= 7){
