@@ -10,7 +10,7 @@ async function ingestTelemetry() {
         const parsedPacket = parseGPUBuffer(rawBuffer);
         await saveTelemetry(parsedPacket);
 
-        console.log('saved telemetry snapshot for node cluster #${parsedPacket.nodeID}');
+        console.log(`saved telemetry snapshot for node cluster #${parsedPacket.nodeID}`);
     }
 }
 

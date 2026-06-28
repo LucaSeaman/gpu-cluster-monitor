@@ -16,6 +16,6 @@ export async function saveTelemetry(packet: GPUPacket): Promise<void> {
     try {
         await query(sql, values);
     } catch (error){
-        console.log('Failed to save telemetry for node ${packet.nodeID}:', error);
+        console.log(`Failed to save telemetry for node ${packet.nodeID}:`, error);
     }
 }
