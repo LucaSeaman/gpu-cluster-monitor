@@ -1,19 +1,21 @@
-import {generateClusterTelemetry} from './simulator.js'
-import {parseGPUParser} from './parser.js'
+import {createRawGPUBuffer} from './simulator.js'
+import {parseGPUBuffer} from './parser.js'
+import {saveTelemetry} from './telemetryRepository.js' 
 
-//logging
+async function ingestTelemetry() {
+    console.log("Starting telemetry ingestion...");
 
-console.log('Starting telemetry stream....');
+    for (let nodeID = 1; nodeID <=5; nodeID++){
+        const rawBuffer = createRawGPUBuffer(nodeID);
+        const parsedPacket = parseGPUBuffer(rawBuffer);
+        await saveTelemetry(parsedPacket);
 
-const rawPackets = generateClusterTelemetry(500);
-console.log('Generated ${rawPackets.length} binary packets');
+        console.log('saved telemetry snapshot for node cluster #${parsedPacket.nodeID}');
+    }
+}
 
-const sampleParsedData = parseGPUParser(rawPackets[0]);
-console.log('\nSample node 1 parsed data:', sampleParsedData);
+ingestTelemetry();
 
-const parsedFleet = rawPackets.map(parseGPUParser);
-const totalPower = parsedFleet.reduce((sum, node) => sum + node.powerDraw, 0);
-const avgDraw = totalPower/parsedFleet.length;
-console.log('\nFleet-wide average power draw: ${avgDraw.to.Fixed(2)}');
+
 
 

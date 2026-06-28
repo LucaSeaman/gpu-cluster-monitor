@@ -1,6 +1,6 @@
 import {GPUPacket} from './simulator.js'
 
-export function parseGPUParser(buffer : Buffer): GPUPacket {
+export function parseGPUBuffer(buffer : Buffer): GPUPacket {
     if (buffer.length!= 7){
         throw new Error ('Invalid packet size: Expected 7 bytes, received ${buffer.length}');
     }

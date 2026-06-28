@@ -8,7 +8,7 @@ export interface GPUPacket {
     powerDraw: number;
 }
 
-function createRawGPUBuffer (nodeID: number):  Buffer{
+export function createRawGPUBuffer (nodeID: number):  Buffer{
     const buffer = Buffer.alloc(7);
 
     const workloadType = Math.floor(Math.random()*3); 
@@ -29,7 +29,7 @@ function createRawGPUBuffer (nodeID: number):  Buffer{
 
 export function generateClusterTelemetry(nodeCount: number=500): Buffer[] {
     const stream: Buffer[] = [];
-    for (let i = 0; i<nodeCount; i++){
+    for (let i = 1; i<=nodeCount; i++){
         stream.push(createRawGPUBuffer(i));
     }
     return stream;
