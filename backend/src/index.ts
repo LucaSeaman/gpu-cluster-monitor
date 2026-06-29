@@ -1,17 +1,24 @@
 import {createRawGPUBuffer} from './simulator.js'
 import {parseGPUBuffer} from './parser.js'
 import {saveTelemetry} from './telemetryRepository.js' 
+import './server.js'
 
 async function ingestTelemetry() {
     console.log("Starting telemetry ingestion...");
+    while(true){
+        for (let nodeID = 1; nodeID <=10; nodeID++){
+            const rawBuffer = createRawGPUBuffer(nodeID);
+            const parsedPacket = parseGPUBuffer(rawBuffer);
+            await saveTelemetry(parsedPacket);
 
-    for (let nodeID = 1; nodeID <=5; nodeID++){
-        const rawBuffer = createRawGPUBuffer(nodeID);
-        const parsedPacket = parseGPUBuffer(rawBuffer);
-        await saveTelemetry(parsedPacket);
+            console.log(`saved telemetry snapshot for node cluster #${parsedPacket.nodeID}`);
+        }
+        console.log("Saved latest telemetry cluster states to PostgreSQL.");
 
-        console.log(`saved telemetry snapshot for node cluster #${parsedPacket.nodeID}`);
+        await new Promise(resolve=>setTimeout(resolve, 5000));
     }
+        
+
 }
 
 ingestTelemetry();
