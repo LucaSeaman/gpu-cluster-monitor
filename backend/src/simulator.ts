@@ -11,7 +11,7 @@ export interface GPUPacket {
 export function createRawGPUBuffer (nodeID: number):  Buffer{
     const buffer = Buffer.alloc(7);
 
-    const workloadType = Math.floor(Math.random()*3); 
+    const workloadType = nodeID%3; 
     const isHeavyWorkload = workloadType>0;
 
     const temperature = isHeavyWorkload?Math.floor(Math.random()*25)+65 : Math.floor(Math.random()*15)+35;
