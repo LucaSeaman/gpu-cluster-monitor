@@ -7,21 +7,25 @@ const PORT = process.env.PORT||3000;
 
 app.use(cors());
 app.use(express.json());
-app.get('/api/telemetry', async (req,res)=> {
-    try{
+app.get('/api/telemetry', async (req, res) => {
+    try {
         const result = await query(`
-           SELECT DISTINCT ON (node_id) id, node_id, workload_type, temperature, fan_speed, power_draw, recorded_at
-           FROM gpu_telemetry
-           ORDER BY node_id, recorded_at DESC; 
+            SELECT id, node_id, workload_type, temperature, fan_speed, power_draw, recorded_at
+            FROM gpu_telemetry
+            WHERE (node_id, recorded_at) IN (
+                SELECT node_id, MAX(recorded_at)
+                FROM gpu_telemetry
+                GROUP BY node_id
+            );
         `);
+
         res.json(result.rows);
 
-    } catch (error){
+    } catch (error) {
         console.error('Error fetching telemetry:', error);
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 app.get('/api/analytics', async (req, res)=> {
   try{
     const result = await query(`
